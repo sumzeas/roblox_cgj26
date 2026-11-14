@@ -13,18 +13,20 @@
 
     "ServerScriptService": {
       "$ignoreUnknownInstances": true,
-      "Server": {
-        "$path": "src/server"
-      }
+      "$path": "src/server"
     },
 
     "StarterPlayer": {
       "$ignoreUnknownInstances": true,
       "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
         "$ignoreUnknownInstances": true,
-        "Client": {
-          "$path": "src/client"
-        }
+        "$path": "src/client"
+      },
+      "StarterCharacterScripts": {
+        "$className": "StarterCharacterScripts",
+        "$ignoreUnknownInstances": true,
+        "$path": "src/character"
       }
     }
   }
