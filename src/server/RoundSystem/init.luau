@@ -151,6 +151,7 @@ function Round.Start(self: Round)
         deathConnections[survivor] = humanoid.Died:Once(function()
             if not self._started then return end
             self._survivors[survivor] = nil
+            survivor.Team = Utils.getTeam(LobbyConfig.TeamName)
 
             if getSurvivorCount(self._survivors) == 0 then
                 self.Ended:Fire(RoundOverReason.AllEliminated)
