@@ -4,14 +4,12 @@ local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local ServerScriptService = game:GetService('ServerScriptService')
 local StatusController = require(ServerScriptService.StatusController)
 local StatusShared = require(ReplicatedStorage.Shared.Status)
-local GoodSignal = require(ReplicatedStorage.Packages.goodsignal)
 
 local LobbySystem = {}
 local LobbyConfig = require(ReplicatedStorage.Shared.LobbyConfig)
 
 local initialized = false
 local timerThread: thread? = nil
-local gameStarted = GoodSignal.new()
 
 -- Begins a timer in a separate thread.
 local function startTimer()
@@ -69,11 +67,7 @@ function LobbySystem.init()
     task.spawn(checkLobby)
 end
 
--- Fired when the game starts. Or in other words, when the status is playing.
-function LobbySystem.onGameStarted(callback: () -> ())
-    return gameStarted:Connect(callback)
-end
-
+-- Resets the lobby and respawns all players with the Lobby team
 function LobbySystem.resetLobby()
     StatusController.setStatus(StatusShared.Enum.Waiting)
     checkLobby()
