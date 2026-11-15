@@ -7,16 +7,4 @@ local RoundSystem = require(ServerScriptService.RoundSystem)
 
 StatusController.init()
 LobbySystem.init()
-
-local statusHandler = {
-    [Status.Enum.Playing] = function()
-        RoundSystem.beginRound()
-    end
-}
-
-StatusController.onChanged(function(statusNum)
-    local handler = statusHandler[statusNum]
-    if handler then
-        handler()
-    end
-end)
+RoundSystem.init()

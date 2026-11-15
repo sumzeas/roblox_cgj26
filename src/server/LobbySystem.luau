@@ -50,6 +50,17 @@ local function checkLobby()
     end
 end
 
+-- Resets the lobby and respawns all players on the Lobby team.
+local function resetLobby()
+    StatusController.setStatus(StatusShared.Enum.Waiting)
+    checkLobby()
+    local lobbyTeam = Teams:FindFirstChild(LobbyConfig.TeamName)
+    for _, player in Players:GetPlayers() do
+        player.Team = lobbyTeam
+        player:LoadCharacterAsync()
+    end
+end
+
 -- Initializes the lobby system.
 function LobbySystem.init()
     if initialized then return end
@@ -63,18 +74,14 @@ function LobbySystem.init()
         task.defer(checkLobby)
     end)
 
+    StatusController.onChanged(function(statusNum)
+        if statusNum == StatusShared.Enum.RoundOver then
+            resetLobby()
+        end
+    end)
+
     task.spawn(checkLobby)
 end
 
--- Resets the lobby and respawns all players with the Lobby team
-function LobbySystem.resetLobby()
-    StatusController.setStatus(StatusShared.Enum.Waiting)
-    checkLobby()
-    local lobbyTeam = Teams:FindFirstChild(LobbyConfig.TeamName)
-    for _, player in Players:GetPlayers() do
-        player.Team = lobbyTeam
-        player:LoadCharacterAsync()
-    end
-end
 
 return LobbySystem
