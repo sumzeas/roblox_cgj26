@@ -9,13 +9,8 @@ local StatusController = require(ServerScriptService.StatusController)
 local Status = require(ReplicatedStorage.Shared.Status)
 local Utils = require(script.Utils)
 
-type RoundOverReason = number
-
-local RoundOverReason  = {
-    AllEliminated = 1 :: RoundOverReason,
-    TimesUp = 2 :: RoundOverReason,
-    BeastLeft = 3 :: RoundOverReason,
-}
+type RoundOverReason = RoundConfig.RoundOverReason
+local RoundOverReason = RoundConfig.RoundOverReason
 
 type Round = {
     _survivors: {[Player]: true},
