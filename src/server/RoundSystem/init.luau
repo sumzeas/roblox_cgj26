@@ -26,6 +26,7 @@ type Round = {
 }
 
 local Round = {}
+Round.__index = Round
 
 function Round.new(players: {Player}, beast: Player): Round
     local survivors = {}
