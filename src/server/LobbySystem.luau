@@ -41,12 +41,12 @@ local function checkLobby()
 
     -- Entering intermission if there is enough players.
     if currentStatus == StatusShared.Enum.Waiting and playerCount >= LobbyConfig.MinPlayers then
-        print('Entering intermission.')
+        -- print('Entering intermission.')
         StatusController.setStatus(StatusShared.Enum.Intermission)
         startTimer()
     -- Exiting intermission if player count falls below threshold.
     elseif currentStatus == StatusShared.Enum.Intermission and playerCount < LobbyConfig.MinPlayers then
-        print('Return to waiting because a player left during intermission')
+        -- print('Return to waiting because a player left during intermission')
         stopTimer()
         StatusController.setStatus(StatusShared.Enum.Waiting)
     end
