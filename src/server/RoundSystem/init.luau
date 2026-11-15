@@ -132,7 +132,7 @@ function Round.Start(self: Round)
 
         print("Round Over!")
         task.wait(RoundConfig.PostRoundDuration)
-        StatusController.setStatus(Status.Enum.RoundOver)
+        StatusController.setStatus(Status.Enum.RoundOver, { reason = reason })
     end)
 end
 

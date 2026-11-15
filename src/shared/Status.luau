@@ -5,6 +5,7 @@ local FOLDER_NAME = "StatusFolder"
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local RoundOverReason = require(ReplicatedStorage.Shared.RoundOverReason)
 local Status = {}
 
 Status.Enum = {
@@ -14,6 +15,10 @@ Status.Enum = {
     RoundOver = 3 :: StatusNumber,
     RepairingMap = 4 :: StatusNumber,
 }
+
+type RoundOverReason = RoundOverReason.RoundOverReason
+export type RoundOverPayload = { reason: RoundOverReason }
+export type StatusPayload = RoundOverPayload
 
 -- Helper for getting the folder containing the game state.
 local function getFolder(): Folder
