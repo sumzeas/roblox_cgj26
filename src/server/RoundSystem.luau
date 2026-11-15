@@ -29,6 +29,16 @@ local function giveTeamGear(player: Player, teamName: string)
     end
 end
 
+-- Helper function for giving the beast god mode.
+local function giveForcefield(player: Player)
+    local character = player.Character
+    if character then
+        local forceField = Instance.new('ForceField')
+        forceField.Visible = false
+        forceField.Parent = character
+    end
+end
+
 -- Assigns the teams of players in this round.
 local function initPlayers(roundPlayers: {Player}, beastPlayer: Player)
     for _, player in roundPlayers do
@@ -63,6 +73,7 @@ function RoundSystem.beginRound()
     local roundPlayers = players
     local beastPlayer = roundPlayers[math.random(1, #roundPlayers)]
     initPlayers(roundPlayers, beastPlayer)
+    giveForcefield(beastPlayer)
 end
 
 return RoundSystem
