@@ -2,6 +2,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Shared = ReplicatedStorage.Shared
 local GoodSignal = require(ReplicatedStorage.Packages.goodsignal)
 local StatusShared = require(Shared.Status)
+type StatusNumber = StatusShared.StatusNumber
+type StatusPayload = StatusShared.StatusPayload
 
 local StatusController = {}
 local currentStatus = StatusShared.Enum.Waiting
@@ -21,18 +23,18 @@ function StatusController.init()
 end
 
 -- Gets the current status of the game.
-function StatusController.getStatus(): StatusShared.StatusNumber
+function StatusController.getStatus(): StatusNumber
     return currentStatus
 end
 
 -- Sets the current status of the game.
-function StatusController.setStatus(newStatus: StatusShared.StatusNumber)
+function StatusController.setStatus(newStatus: StatusNumber, payload: StatusPayload?)
     currentStatus = newStatus
-    remoteEvent:FireAllClients(newStatus)
+    remoteEvent:FireAllClients(newStatus, payload or {})
     changedSignal:Fire(newStatus)
 end
 
-function StatusController.onChanged(callback: (statusNum: StatusShared.StatusNumber) -> ())
+function StatusController.onChanged(callback: (statusNum: StatusNumber, payload: any?) -> ())
     return changedSignal:Connect(callback)
 end
 

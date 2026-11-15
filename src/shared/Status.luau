@@ -5,6 +5,7 @@ local FOLDER_NAME = "StatusFolder"
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local RoundOverReason = require(ReplicatedStorage.Shared.RoundOverReason)
 local Status = {}
 
 Status.Enum = {
@@ -13,7 +14,12 @@ Status.Enum = {
     Playing = 2 :: StatusNumber,
     RoundOver = 3 :: StatusNumber,
     RepairingMap = 4 :: StatusNumber,
+    RoundEnding = 5 :: StatusNumber,
 }
+
+type RoundOverReason = RoundOverReason.RoundOverReason
+export type RoundOverPayload = { reason: RoundOverReason }
+export type StatusPayload = RoundOverPayload | {}
 
 -- Helper for getting the folder containing the game state.
 local function getFolder(): Folder
@@ -65,9 +71,9 @@ function Status.getStatus(): StatusNumber
 end
 
 -- Fired when the status of the game is changed on the server. Only can be ran on the client.
-function Status.onChanged(callback: (statusNum: StatusNumber) -> ())
+function Status.onChanged(callback: (statusNum: StatusNumber, payload: StatusPayload) -> ())
     if RunService:IsServer() then return end
-    Status:getRemoteEvent().OnClientEvent:Connect(callback)
+    Status.getRemoteEvent().OnClientEvent:Connect(callback)
 end 
 
 return Status
