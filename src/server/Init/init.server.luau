@@ -1,10 +1,10 @@
-local ServerScriptService = game:GetService("ServerScriptService")
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
+local ServerScriptService = game:GetService('ServerScriptService')
 local StatusController = require(ServerScriptService.StatusController)
+local Status = require(ReplicatedStorage.Shared.Status)
 local LobbySystem = require(ServerScriptService.LobbySystem)
+local RoundSystem = require(ServerScriptService.RoundSystem)
 
 StatusController.init()
 LobbySystem.init()
-
-LobbySystem.onGameStarted(function()
-    print('Game started! Woohoo!')
-end)
+RoundSystem.init()

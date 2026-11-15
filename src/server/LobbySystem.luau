@@ -1,16 +1,15 @@
 local Players = game:GetService('Players')
+local Teams = game:GetService('Teams')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local ServerScriptService = game:GetService('ServerScriptService')
 local StatusController = require(ServerScriptService.StatusController)
 local StatusShared = require(ReplicatedStorage.Shared.Status)
-local GoodSignal = require(ReplicatedStorage.Packages.goodsignal)
 
 local LobbySystem = {}
 local LobbyConfig = require(ReplicatedStorage.Shared.LobbyConfig)
 
 local initialized = false
 local timerThread: thread? = nil
-local gameStarted = GoodSignal.new()
 
 -- Begins a timer in a separate thread.
 local function startTimer()
@@ -19,7 +18,6 @@ local function startTimer()
             task.wait(LobbyConfig.Duration)
             timerThread = nil
             StatusController.setStatus(StatusShared.Enum.Playing)
-            gameStarted:Fire()
             print('Now playing!')
         end)
     end
@@ -52,6 +50,17 @@ local function checkLobby()
     end
 end
 
+-- Resets the lobby and respawns all players on the Lobby team.
+local function resetLobby()
+    StatusController.setStatus(StatusShared.Enum.Waiting)
+    checkLobby()
+    local lobbyTeam = Teams:FindFirstChild(LobbyConfig.TeamName)
+    for _, player in Players:GetPlayers() do
+        player.Team = lobbyTeam
+        player:LoadCharacterAsync()
+    end
+end
+
 -- Initializes the lobby system.
 function LobbySystem.init()
     if initialized then return end
@@ -65,12 +74,14 @@ function LobbySystem.init()
         task.defer(checkLobby)
     end)
 
+    StatusController.onChanged(function(statusNum)
+        if statusNum == StatusShared.Enum.RoundOver then
+            resetLobby()
+        end
+    end)
+
     task.spawn(checkLobby)
 end
 
--- Fired when the game starts. Or in other words, when the status is playing.
-function LobbySystem.onGameStarted(callback: () -> ())
-    return gameStarted:Connect(callback)
-end
 
 return LobbySystem

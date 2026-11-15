@@ -11,6 +11,8 @@ Status.Enum = {
     Waiting = 0 :: StatusNumber,
     Intermission = 1 :: StatusNumber,
     Playing = 2 :: StatusNumber,
+    RoundOver = 3 :: StatusNumber,
+    RepairingMap = 4 :: StatusNumber,
 }
 
 -- Helper for getting the folder containing the game state.
