@@ -3,13 +3,14 @@ local ServerScriptService = game:GetService('ServerScriptService')
 local Players = game:GetService('Players')
 
 local RoundConfig = require(ReplicatedStorage.Shared.RoundConfig)
+local RoundOverReason = require(ReplicatedStorage.Shared.RoundOverReason)
 local LobbyConfig = require(ReplicatedStorage.Shared.LobbyConfig)
 local GoodSignal = require(ReplicatedStorage.Packages.goodsignal)
 local StatusController = require(ServerScriptService.StatusController)
 local Status = require(ReplicatedStorage.Shared.Status)
 local Utils = require(script.Utils)
 
-type RoundOverReason = RoundConfig.RoundOverReason
+type RoundOverReason = RoundOverReason.RoundOverReason
 local RoundOverReason = RoundConfig.RoundOverReason
 
 type Round = {
