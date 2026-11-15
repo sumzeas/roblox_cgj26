@@ -11,7 +11,7 @@ local Status = require(ReplicatedStorage.Shared.Status)
 local Utils = require(script.Utils)
 
 type RoundOverReason = RoundOverReason.RoundOverReason
-local RoundOverReason = RoundConfig.RoundOverReason
+local RoundOverReason = RoundOverReason
 
 type Round = {
     _survivors: {[Player]: true},
