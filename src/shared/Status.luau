@@ -67,7 +67,7 @@ end
 -- Fired when the status of the game is changed on the server. Only can be ran on the client.
 function Status.onChanged(callback: (statusNum: StatusNumber) -> ())
     if RunService:IsServer() then return end
-    Status:getRemoteEvent().OnClientEvent:Connect(callback)
+    Status.getRemoteEvent().OnClientEvent:Connect(callback)
 end 
 
 return Status
