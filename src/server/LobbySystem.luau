@@ -18,7 +18,6 @@ local function startTimer()
             task.wait(LobbyConfig.Duration)
             timerThread = nil
             StatusController.setStatus(StatusShared.Enum.Playing)
-            gameStarted:Fire()
             print('Now playing!')
         end)
     end
