@@ -1,4 +1,5 @@
 local Players = game:GetService('Players')
+local Teams = game:GetService('Teams')
 local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local ServerScriptService = game:GetService('ServerScriptService')
 local StatusController = require(ServerScriptService.StatusController)
@@ -71,6 +72,16 @@ end
 -- Fired when the game starts. Or in other words, when the status is playing.
 function LobbySystem.onGameStarted(callback: () -> ())
     return gameStarted:Connect(callback)
+end
+
+function LobbySystem.resetLobby()
+    StatusController.setStatus(StatusShared.Enum.Waiting)
+    checkLobby()
+    local lobbyTeam = Teams:FindFirstChild(LobbyConfig.TeamName)
+    for _, player in Players:GetPlayers() do
+        player.Team = lobbyTeam
+        player:LoadCharacter()
+    end
 end
 
 return LobbySystem
