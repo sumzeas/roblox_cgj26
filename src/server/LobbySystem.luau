@@ -73,7 +73,7 @@ function LobbySystem.resetLobby()
     local lobbyTeam = Teams:FindFirstChild(LobbyConfig.TeamName)
     for _, player in Players:GetPlayers() do
         player.Team = lobbyTeam
-        player:LoadCharacter()
+        player:LoadCharacterAsync()
     end
 end
 
