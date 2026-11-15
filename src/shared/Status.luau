@@ -14,6 +14,7 @@ Status.Enum = {
     Playing = 2 :: StatusNumber,
     RoundOver = 3 :: StatusNumber,
     RepairingMap = 4 :: StatusNumber,
+    RoundEnding = 5 :: StatusNumber,
 }
 
 type RoundOverReason = RoundOverReason.RoundOverReason

@@ -66,7 +66,7 @@ local handlers = {
         startCountdown(duration, 'Intermission')
     end,
 
-    [Status.Enum.RoundOver] = function(payload: Status.RoundOverPayload?)
+    [Status.Enum.RoundEnding] = function(payload: Status.RoundOverPayload?)
         stopActiveTimer()
         local reason = payload and payload.reason
         if reason and roundOverHandlers[reason] then
