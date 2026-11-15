@@ -1,4 +1,4 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService('ReplicatedStorage')
 local Packages = ReplicatedStorage:WaitForChild('Packages')
 local GoodSignal = require(Packages:WaitForChild('goodsignal'))
 
@@ -15,6 +15,7 @@ export type Timer = {
     Tick: GoodSignal,
     Started: GoodSignal,
     Stopped: GoodSignal,
+    Completed: GoodSignal,
     Start: (self: Timer) -> (),
     Stop: (self: Timer) -> (),
     ModifyDuration: (self: Timer, modifyCallback: (duration: number) -> number) -> (),
@@ -22,7 +23,7 @@ export type Timer = {
     GetDuration: (self: Timer) -> number,
 }
 
-function Timer.new(duration: number, tickRateSeconds: number): Timer
+function Timer.new(duration: number, tickRateSeconds: number?): Timer
     return setmetatable({
         _duration = duration,
         _tickRateSeconds = tickRateSeconds or 1,
@@ -31,6 +32,7 @@ function Timer.new(duration: number, tickRateSeconds: number): Timer
         Tick = GoodSignal.new(),
         Started = GoodSignal.new(),
         Stopped = GoodSignal.new(),
+        Completed = GoodSignal.new(),
     }, Timer)
 end
 
@@ -44,7 +46,7 @@ function Timer.Start(self: Timer)
         while self._started and elapsed < self._duration do
             local remaining = math.max(0, self._duration - elapsed)
             self.Tick:Fire(elapsed, remaining)
-            
+
             task.wait(self._tickRateSeconds)
             elapsed += self._tickRateSeconds
         end
@@ -54,6 +56,7 @@ function Timer.Start(self: Timer)
             self._task = nil
             self.Tick:Fire(self._duration, 0)
             self.Stopped:Fire()
+            self.Completed:Fire()
         end
     end)
 end
@@ -61,12 +64,13 @@ end
 function Timer.Stop(self: Timer)
     if not self._started then return end
     self._started = false
-    
-    if self._task then
-        task.cancel(self._task)
-        self._task = nil
+
+    local thread = self._task
+    self._task = nil
+    if thread and coroutine.status(thread) == 'suspended' then
+        task.cancel(thread)
     end
-    
+
     self.Stopped:Fire()
 end
 

@@ -15,27 +15,30 @@ local announcementGui: ScreenGui = playerGui:WaitForChild('AnnouncementGui')
 local textLabel: TextLabel = announcementGui:WaitForChild('TextLabel')
 
 local activeTimer: Timer? = nil
+local statusVersion = 0
 
 local function stopActiveTimer()
-    if activeTimer then
-        activeTimer:Stop()
-        activeTimer = nil
+    local timer = activeTimer
+    activeTimer = nil
+    if timer then
+        timer:Stop()
     end
 end
 
 local function startCountdown(duration: number, textPrefix: string, onComplete: (() -> ())?)
     stopActiveTimer()
-    
-    activeTimer = Timer.new(duration, 1)
-    activeTimer.Tick:Connect(function(elapsed, remaining)
+
+    local timer = Timer.new(duration, 1)
+    activeTimer = timer
+    timer.Tick:Connect(function(elapsed, remaining)
         textLabel.Text = string.format("%s: %ds", textPrefix, remaining)
     end)
-    
+
     if onComplete then
-        activeTimer.Stopped:Once(onComplete)
+        timer.Completed:Once(onComplete)
     end
-    
-    activeTimer:Start()
+
+    timer:Start()
 end
 
 local roundOverHandlers = {
@@ -63,15 +66,18 @@ local handlers = {
         startCountdown(duration, 'Intermission')
     end,
 
-    [Status.Enum.RoundOver] = function(payload: Status.RoundOverPayload)
+    [Status.Enum.RoundOver] = function(payload: Status.RoundOverPayload?)
         stopActiveTimer()
-        if roundOverHandlers[payload.reason] then
-            roundOverHandlers[payload.reason]()
+        local reason = payload and payload.reason
+        if reason and roundOverHandlers[reason] then
+            roundOverHandlers[reason]()
         else
             textLabel.Text = 'Round over!'
         end
-        
+
+        local myVersion = statusVersion
         task.delay(2, function()
+            if statusVersion ~= myVersion then return end
             local remainingPostRound = math.max(0, RoundConfig.PostRoundDuration - 2)
             startCountdown(remainingPostRound, 'Next round starting')
         end)
@@ -84,9 +90,16 @@ local handlers = {
     end
 }
 
-Status.onChanged(function(statusNum, payload)
+local function onStatus(statusNum, payload)
+    statusVersion += 1
     local handler = handlers[statusNum]
     if handler then
         handler(payload)
     end
+end
+
+Status.onChanged(onStatus)
+
+task.spawn(function()
+    onStatus(Status.getStatus(), nil)
 end)
