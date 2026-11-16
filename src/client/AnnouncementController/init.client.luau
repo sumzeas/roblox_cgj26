@@ -84,9 +84,14 @@ local handlers = {
     end,
 
     [Status.Enum.Playing] = function()
-        startCountdown(RoundConfig.HeadStartDuration, 'Head Start', function()
+        startCountdown(RoundConfig.HeadStartDuration, 'Get ready!', function()
             startCountdown(RoundConfig.Duration, 'Time remaining')
         end)
+    end,
+
+    [Status.Enum.RepairingMap] = function()
+        stopActiveTimer()
+        textLabel.Text = 'Repairing map...'
     end
 }
 

@@ -17,8 +17,8 @@ local function startTimer()
         timerThread = task.spawn(function()
             task.wait(LobbyConfig.Duration)
             timerThread = nil
-            StatusController.setStatus(StatusShared.Enum.Playing)
-            print('Now playing!')
+            StatusController.setStatus(StatusShared.Enum.RepairingMap)
+            print('Repairing map...')
         end)
     end
 end
